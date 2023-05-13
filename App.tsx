@@ -3,11 +3,9 @@ import {
   Animated,
   Button,
   Image,
-  NativeModules,
   NativeSyntheticEvent,
-  requireNativeComponent,
   SafeAreaView,
-  Text,
+  StyleSheet,
   useColorScheme,
 } from 'react-native';
 // import {CameraScreen} from './CameraScreen';
@@ -15,14 +13,12 @@ import {
 
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import View = Animated.View;
-import {BubblingEventHandler} from 'react-native/Libraries/Types/CodegenTypes';
-const RCTCustomView = requireNativeComponent('ArCamera');
+import {CameraView} from './src/CameraModule';
+import type {PhotoResult} from './src/CameraModule';
 
-type PhotoResult = {resultUrl: string};
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const [hello, setHello] = useState<string | null>(null);
   const [photoURL, setPhotoURL] = useState<string | null>(null);
 
   const backgroundStyle = {
@@ -33,33 +29,30 @@ function App(): JSX.Element {
   const onPhotoTaken = ({
     nativeEvent: {resultUrl},
   }: NativeSyntheticEvent<PhotoResult>) => {
-    console.log('REZURL\n', resultUrl);
     setPhotoURL(resultUrl);
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <View
-        style={{flex: 1, alignItems: 'center', justifyContent: 'flex-start'}}>
-        <RCTCustomView
-          style={{width: 150, height: 150}}
-          onResultImageExported={onPhotoTaken}
-        />
+      <View style={styles.container}>
+        <CameraView onPhotoTaken={onPhotoTaken} style={styles.camera} />
 
         {photoURL !== null ? (
-          <Image source={{uri: photoURL}} style={{width: 200, height: 200}} />
+          <Image source={{uri: photoURL}} style={styles.cameraResult} />
         ) : (
-          <View style={{height: 230}} />
+          <View style={styles.placeholder} />
         )}
-        <Button
-          title={'TakePhoto'}
-          onPress={async () => {
-            NativeModules.ArCamera?.takePhoto();
-          }}
-        />
+        <Button title={'TakePhoto'} onPress={() => CameraView.takePhoto()} />
       </View>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {flex: 1, alignItems: 'center', justifyContent: 'flex-start'},
+  camera: {width: 200, height: 200},
+  cameraResult: {width: 300, height: 300, marginTop: 16, borderRadius: 16},
+  placeholder: {height: 310},
+});
 
 export default App;
