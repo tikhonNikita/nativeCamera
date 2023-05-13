@@ -1,18 +1,7 @@
 import React from 'react';
-import {
-  NativeModules,
-  NativeSyntheticEvent,
-  requireNativeComponent,
-} from 'react-native';
-import {StyleProp} from 'react-native';
-import {ViewStyle} from 'react-native';
-
-interface NativeCamera {
-  style: StyleProp<ViewStyle> | undefined;
-  onResultImageExported?: (event: any) => void;
-}
-
-const RCTCustomView = requireNativeComponent<NativeCamera>('ArCamera');
+import {NativeModules, NativeSyntheticEvent} from 'react-native';
+import {StyleProp, ViewStyle} from 'react-native';
+import RCTCustomView from './cameraView';
 
 export type PhotoResult = {resultUrl: string};
 
