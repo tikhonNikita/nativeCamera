@@ -14,7 +14,7 @@ class CameraView: UIView, ARSCNViewDelegate {
     var sceneView: ARSCNView?
     var lightModel: SCNMaterial.LightingModel = .physicallyBased
     var videoFormat: ARFaceTrackingConfiguration.VideoFormat?
-    public var onResultImageExported: RCTBubblingEventBlock?
+   public var onResultImageExported: RCTBubblingEventBlock?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,7 +51,8 @@ class CameraView: UIView, ARSCNViewDelegate {
   
     public func takePhoto() {
       let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-      let url = URL(fileURLWithPath: path).appendingPathComponent("photoProcessed.png")
+      let currentTimeInSeconds = String(Int(Date().timeIntervalSince1970)).dropFirst(7)
+      let url = URL(fileURLWithPath: path).appendingPathComponent("photo\(currentTimeInSeconds)Processed.png")
       
       try! imageFrom(scene: self.sceneView!).pngData()?.write(to: url)
       

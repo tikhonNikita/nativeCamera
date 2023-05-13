@@ -53,5 +53,7 @@
 	<false/>
 	<key>NSCameraUsageDescription</key>
 	<string>I would like to use camera for dev purposes</string>
+  <key>UISceneConfigurations</key>
+  <dict/>
 </dict>
 </plist>
