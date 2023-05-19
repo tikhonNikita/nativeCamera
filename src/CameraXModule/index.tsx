@@ -4,5 +4,5 @@ type BaseView = {
   style: StyleProp<ViewStyle> | undefined;
 };
 
-const ComposeTextRow = requireNativeComponent<BaseView>('ComposeRowView');
-export default ComposeTextRow;
+const CameraView = requireNativeComponent<BaseView>('CameraView');
+export default CameraView;

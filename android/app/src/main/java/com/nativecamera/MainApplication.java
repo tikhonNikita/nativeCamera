@@ -25,8 +25,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
 
           // Packages that cannot be autolinked yet can be added manually here, for example:
-           packages.add(new MyComposeTextPackage());
-           packages.add(new ComposeRowPackage());
+           packages.add(new CameraPackage());
           return packages;
         }
 

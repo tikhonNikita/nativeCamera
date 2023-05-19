@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import ComposeTextRow from '../CameraXModule';
+import CameraView from '../CameraXModule';
 
 export function HomeScreen() {
   return (
@@ -12,7 +12,7 @@ export function HomeScreen() {
         backgroundColor: 'pink',
       }}>
       <View style={{backgroundColor: 'white', width: '80%', height: '80%'}}>
-        <ComposeTextRow style={{flex: 1}} />
+        <CameraView style={{flex: 1}} />
       </View>
     </View>
   );
