@@ -1,5 +1,6 @@
-package com.nativecamera
+package com.nativecamera.camera
 
+import android.Manifest
 import android.net.Uri
 import android.view.View
 import androidx.camera.core.ImageCaptureException
@@ -11,7 +12,11 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.nativecamera.camera.CameraScreen
+import com.nativecamera.camera.components.PermissionView
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -32,7 +37,7 @@ class CameraViewManager : SimpleViewManager<View>() {
     override fun getName(): String = "CameraView"
 
     private fun handleImageCapture(uri: Uri) {
-        sendEvent(context,  uri.toRnArgs())
+        sendEvent(context, uri.toRnArgs())
     }
 
     private fun handleError(exception: ImageCaptureException) {
@@ -44,6 +49,8 @@ class CameraViewManager : SimpleViewManager<View>() {
         context = reactApplicationContext
         return ComposeView(reactApplicationContext).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            outputDirectory = getOutputDirectory(reactApplicationContext)
+            cameraExecutor = Executors.newSingleThreadExecutor()
             setContent {
                 CameraScreen(
                     cameraExecutor,
@@ -52,8 +59,6 @@ class CameraViewManager : SimpleViewManager<View>() {
                     ::handleError
                 )
             }
-            cameraExecutor = Executors.newSingleThreadExecutor()
-            outputDirectory = getOutputDirectory(reactApplicationContext)
         }
     }
 

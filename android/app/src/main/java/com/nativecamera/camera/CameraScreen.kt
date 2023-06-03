@@ -29,22 +29,20 @@ fun CameraScreen(
 
     DisposableEffect(Unit) {
         onDispose {
-            cameraExecutor.shutdown()
+                cameraExecutor.shutdown()
         }
     }
 
-    //TODO: move init logic to viewModel
-
     BaseComposeView {
-        if (cameraPermissionState.status.isGranted) {
+        PermissionView(
+            cameraPermissionState
+        ) {
             Camera(
                 outputDirectory = outputDirectory,
                 executor = cameraExecutor,
                 onImageCaptured = handleImageCapture,
                 onError = handleError
             )
-        } else {
-            PermissionView(cameraPermissionState)
         }
     }
 }
