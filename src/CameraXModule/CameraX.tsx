@@ -16,7 +16,19 @@ export const CameraX: FC<Props> = ({style, onPhoto}) => {
         onPhoto(event.resultUri);
       }
     });
-    return subscription.remove;
+
+    const errorSubscription = eventEmitter.addListener(
+      'onPhotoErrorEvent',
+      event => {
+        if (event.error) {
+          console.log(event.error);
+        }
+      },
+    );
+    return () => {
+      subscription.remove();
+      errorSubscription.remove();
+    };
   });
 
   return <CameraView style={style} />;
