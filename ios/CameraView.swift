@@ -14,7 +14,8 @@ class CameraView: UIView, ARSCNViewDelegate {
     var sceneView: ARSCNView?
     var lightModel: SCNMaterial.LightingModel = .physicallyBased
     var videoFormat: ARFaceTrackingConfiguration.VideoFormat?
-   public var onResultImageExported: RCTBubblingEventBlock?
+    public var onResultImageExported: RCTBubblingEventBlock?
+    public var onImageCaptureError: RCTBubblingEventBlock?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -50,12 +51,17 @@ class CameraView: UIView, ARSCNViewDelegate {
     }
   
     public func takePhoto() {
-      let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-      let currentTimeInSeconds = String(Int(Date().timeIntervalSince1970)).dropFirst(7)
-      let url = URL(fileURLWithPath: path).appendingPathComponent("photo\(currentTimeInSeconds)Processed.png")
-      
-      try! imageFrom(scene: self.sceneView!).pngData()?.write(to: url)
-      
-      self.onResultImageExported?(["resultUrl":url.path])
+      do {
+        let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+        let currentTimeInSeconds = String(Int(Date().timeIntervalSince1970)).dropFirst(7)
+        let url = URL(fileURLWithPath: path).appendingPathComponent("photo\(currentTimeInSeconds)Processed.png")
+        
+        try imageFrom(scene: self.sceneView!).pngData()?.write(to: url)
+        
+        self.onResultImageExported?(["resultUrl":url.path])
+      } catch {
+    
+        self.onImageCaptureError?(["reason": error.localizedDescription])
+      }
     }
 }

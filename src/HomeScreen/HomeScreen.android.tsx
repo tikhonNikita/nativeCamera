@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, View} from 'react-native';
-import {CameraX} from '../CameraXModule';
+import {CameraX} from '../Camera/CameraXModule';
 
 export function HomeScreen() {
   const [uri, setUri] = React.useState<string>('');

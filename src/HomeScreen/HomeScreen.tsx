@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {CameraView, PhotoResult} from '../CameraModule';
+import {CameraView, PhotoResult} from '../Camera/CameraModule';
+import {PhotoResultError} from '../Camera/CameraModule/CameraView';
 
 export function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -27,10 +28,18 @@ export function HomeScreen(): JSX.Element {
     setPhotoURL(resultUrl);
   };
 
+  const onImageCaptureError = ({
+    nativeEvent: {reason},
+  }: NativeSyntheticEvent<PhotoResultError>) => console.log('Error\n', reason);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <View style={styles.container}>
-        <CameraView onPhotoTaken={onPhotoTaken} style={styles.camera} />
+        <CameraView
+          onPhotoTaken={onPhotoTaken}
+          onImageCaptureError={onImageCaptureError}
+          style={styles.camera}
+        />
 
         {photoURL !== null ? (
           <Image source={{uri: photoURL}} style={styles.cameraResult} />
