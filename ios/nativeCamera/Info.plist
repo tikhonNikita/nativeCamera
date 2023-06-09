@@ -55,5 +55,14 @@
 	<string>I would like to use camera for dev purposes</string>
   <key>UISceneConfigurations</key>
   <dict/>
+  <key>NSAppTransportSecurity</key>
+      <dict>
+          <key>NSAllowsArbitraryLoads</key>
+          <true/>
+          <key>NSAllowsArbitraryLoadsInWebContent</key>
+          <true/>
+          <key>NSAllowsLocalNetworking</key>
+          <true/>
+      </dict>
 </dict>
 </plist>

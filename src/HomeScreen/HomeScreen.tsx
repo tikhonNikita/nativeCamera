@@ -1,7 +1,5 @@
 import {
-  Button,
   Image,
-  NativeSyntheticEvent,
   SafeAreaView,
   StyleSheet,
   View,
@@ -9,8 +7,7 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {CameraView, PhotoResult} from '../Camera/CameraModule';
-import {PhotoResultError} from '../Camera/CameraModule/CameraView';
+import {NativeCamera} from '../Camera';
 
 export function HomeScreen(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,31 +19,25 @@ export function HomeScreen(): JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const onPhotoTaken = ({
-    nativeEvent: {resultUrl},
-  }: NativeSyntheticEvent<PhotoResult>) => {
+  const onPhotoTaken = (resultUrl: string) => {
     setPhotoURL(resultUrl);
   };
 
-  const onImageCaptureError = ({
-    nativeEvent: {reason},
-  }: NativeSyntheticEvent<PhotoResultError>) => console.log('Error\n', reason);
+  const onImageCaptureError = (reason: string) =>
+    console.log('Error\n', reason);
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <View style={styles.container}>
-        <CameraView
-          onPhotoTaken={onPhotoTaken}
-          onImageCaptureError={onImageCaptureError}
-          style={styles.camera}
-        />
-
         {photoURL !== null ? (
           <Image source={{uri: photoURL}} style={styles.cameraResult} />
         ) : (
-          <View style={styles.placeholder} />
+          <NativeCamera
+            onPhoto={onPhotoTaken}
+            onError={onImageCaptureError}
+            style={styles.camera}
+          />
         )}
-        <Button title={'TakePhoto'} onPress={() => CameraView.takePhoto()} />
       </View>
     </SafeAreaView>
   );
@@ -54,7 +45,7 @@ export function HomeScreen(): JSX.Element {
 
 const styles = StyleSheet.create({
   container: {flex: 1, alignItems: 'center', justifyContent: 'flex-start'},
-  camera: {width: 200, height: 200},
+  camera: {width: '100%', height: '100%'},
   cameraResult: {width: 300, height: 300, marginTop: 16, borderRadius: 16},
   placeholder: {height: 310},
 });

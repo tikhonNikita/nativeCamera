@@ -4,11 +4,12 @@ import {FC, useEffect} from 'react';
 import CameraView from './nativeCameraModule';
 
 type Props = {
-  style: StyleProp<ViewStyle> | undefined;
+  style?: StyleProp<ViewStyle> | undefined;
   onPhoto: (uri: string) => void;
+  onError: (reason: string) => void;
 };
 
-export const CameraX: FC<Props> = ({style, onPhoto}) => {
+export const CameraX: FC<Props> = ({style, onPhoto, onError}) => {
   useEffect(() => {
     const eventEmitter = new NativeEventEmitter();
     const subscription = eventEmitter.addListener('onPhotoTaken', event => {
@@ -21,7 +22,7 @@ export const CameraX: FC<Props> = ({style, onPhoto}) => {
       'onPhotoErrorEvent',
       event => {
         if (event.error) {
-          console.log(event.error);
+          onError(event.error);
         }
       },
     );
